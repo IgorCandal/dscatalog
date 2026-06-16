@@ -1,8 +1,12 @@
 package com.candal.dscatalog.services;
 
 import java.util.List;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.candal.dscatalog.dto.CategoryDTO;
 import com.candal.dscatalog.entities.Category;
 import com.candal.dscatalog.repositories.CategoryRepository;
 
@@ -15,8 +19,11 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<Category> findAll(){
-        return repository.findAll();
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> findAll(){
+        List<Category> list = repository.findAll();
+
+        return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
      }
     
 }
