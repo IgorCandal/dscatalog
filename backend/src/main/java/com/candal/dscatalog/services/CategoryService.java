@@ -12,6 +12,8 @@ import com.candal.dscatalog.entities.Category;
 import com.candal.dscatalog.exceptions.EntityNotFoundExceptions;
 import com.candal.dscatalog.repositories.CategoryRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CategoryService {
 
@@ -42,6 +44,19 @@ public class CategoryService {
         entity = repository.save(entity);
         return new CategoryDTO(entity);
         
+    }
+
+    @Transactional
+     public CategoryDTO update(Long id, CategoryDTO dto) {
+        try{
+            Category entity = repository.getReferenceById(id);
+            entity.setName(dto.getName());
+            entity = repository.save(entity);
+            return new CategoryDTO(entity);
+        } 
+        catch (EntityNotFoundException e){
+            throw new EntityNotFoundExceptions("Id not Found " + id);
+        }
     }
 
     
