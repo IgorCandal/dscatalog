@@ -1,8 +1,10 @@
 package com.candal.dscatalog.resources;
 
 import java.net.URI;
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,8 +33,10 @@ public class CategoryResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll(){
-        List<CategoryDTO> list = service.findAll();
+    public ResponseEntity<Page<CategoryDTO>> findAll(
+            @PageableDefault(page = 0, size = 12, sort = "name", direction = Direction.ASC) Pageable pageable) {
+        
+        Page<CategoryDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
     
